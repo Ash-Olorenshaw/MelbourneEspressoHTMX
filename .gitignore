@@ -1,0 +1,7 @@
+__pycache__/
+.git/
+venv/
+
+.env
+fly.toml
+Dockerfile
