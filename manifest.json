@@ -1,0 +1,12 @@
+{
+	"name": "Melbourne Espresso",
+	"start_url": "https://melbourneespresso.com",
+	"display": "fullscreen",
+	"icons": [
+		{
+			"src": "static/images/favicon.ico",
+			"sizes": "32x32",
+			"type": "image/png"
+		}
+	]
+}

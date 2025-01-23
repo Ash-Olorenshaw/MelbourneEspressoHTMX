@@ -2,7 +2,7 @@ import sys
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, render_template, request
+from flask import Flask, jsonify, render_template, render_template, request, send_file
 import psycopg
 from psycopg import sql
 
@@ -69,3 +69,7 @@ def toilets():
     return jsonify(
         final_data
     ), 200
+
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_file('manifest.json', mimetype='application/manifest+json')
