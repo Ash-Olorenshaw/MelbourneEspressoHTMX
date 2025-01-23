@@ -10,7 +10,7 @@ The web app uses what I've stupidly dubbed the `PFfHhhh Stack` (as in the noise 
 
  - `Postgres`
  - `Flask`
-  - **(optional)** `Fly.io` (for hosting since it's just so easy!)
+   - **(optional)** `Fly.io` (for hosting since it's just so easy!)
  - `HTMX`
  - *and most importantly*: `hours` of work wrangling HTML/CSS/JS into line
 
