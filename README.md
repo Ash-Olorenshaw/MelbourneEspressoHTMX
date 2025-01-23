@@ -26,7 +26,7 @@ cd MelbourneEspressoHTMX
 
 Next, you'll need a `.env` file. Your `.env` file must have the following fields:
 
-```sh
+```python
 DB_NAME=      # database name
 DB_USER=      # database username
 DB_PWD=       # database password
@@ -41,11 +41,11 @@ CAFE_TABLE=   # db table name for cafe info
 
 Your Postgres DB should be then populated with a Cafe table that has the following columns:
 
-**Title** **Longtitude** **Latitude** **Address** **Coffee** **Size** **Price** **Matcha** **Chai** **Notes**
+**Title** | **Longtitude** | **Latitude** | **Address** | **Coffee** | **Size** | **Price** | **Matcha** | **Chai** | **Notes**
 
 And the toilet table should contain the following:
 
-**Title** **Longtitude** **Latitude** **Address** **Notes**
+**Title** | **Longtitude** | **Latitude** | **Address** | **Notes**
 
 After that, create a Python Virtual Environment like this:
 
