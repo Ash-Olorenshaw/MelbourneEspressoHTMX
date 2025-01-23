@@ -1,0 +1,108 @@
+<div class = "centred-element" style = "width: 100%">
+	<script src = "{{ url_for('static', filename = 'map.js') }}"></script>
+	<div style = "display: flex; justify-content: left; align-items: center; padding: 20px">
+		<img src = "{{ url_for("static", filename = "images/cup.png") }}" alt = "Site Icon" style = "width: 100px; padding: 0px 5% 1% 0px""/>
+		<div style = "display: flex; justify-content: center; width: 100%">
+			<img src = "{{ url_for("static", filename = "images/CupIcon.png") }}" alt = "Cafe Icon" style = "width: 30px; padding: 5% 10px 0px 2.5%"/>
+			<label style = "padding: 5% 10px 0px 0px">
+				<input type="checkbox" id = "cafeSwitch" onclick="updateMarks()" checked>
+				<div class="switch blue" style = "width: 50px; height: 25px; border-radius: 25px;">
+					<div class="circle" style = "width: 21px; height: 21px; top: 2px; left: 2px;"></div>
+				</div>
+			</label>
+			<img src = "{{ url_for("static", filename = "images/ToiletIcon.png") }}" alt = "Toilet Icon" style = "width: 30px; padding: 5% 10px 0px 2.5%"/>
+			<label style = "padding: 5% 10px 0px 0px">
+				<input type="checkbox" id = "toiletSwitch" onclick="updateMarks()">
+				<div class="switch green" style = "width: 50px; height: 25px; border-radius: 25px;">
+					<div class="circle" style = "width: 21px; height: 21px; top: 2px; left: 2px;"></div>
+				</div>
+			</label>
+		</div>
+	</div>
+	<div style = "position: absolute; bottom: 0; left: 0; z-index: 999999; padding: 0px 0px 50px 25px;">
+		<button type = "button" class = "mapLocButton" style = "border-radius: 20px; cursor: pointer;" onclick = "switchLocationOn()">
+			<svg width = "60px" height = "60px" viewBox='30 70 150 150' fill='%23bab700' xmlns='http://www.w3.org/2000/svg'><path d='m 104.99979,92.928695 c -2.67709,0 -4.83226,2.155174 -4.83226,4.832263 v 7.872902 a 43.21183,43.21183 0 0 0 -38.033338,38.03386 h -7.873421 c -2.677089,0 -4.832264,2.15517 -4.832264,4.83226 0,2.67709 2.155175,4.83226 4.832264,4.83226 h 7.873421 a 43.21183,43.21183 0 0 0 38.033338,38.03386 v 7.8729 c 0,2.67709 2.15517,4.83226 4.83226,4.83226 2.67709,0 4.83227,-2.15517 4.83227,-4.83226 v -7.8729 a 43.21183,43.21183 0 0 0 38.03385,-38.03386 h 7.8729 c 2.67709,0 4.83278,-2.15517 4.83278,-4.83226 0,-2.67709 -2.15569,-4.83226 -4.83278,-4.83226 h -7.80882 a 43.21183,43.21183 0 0 0 -38.09793,-38.09794 v -7.808822 c 0,-2.677089 -2.15518,-4.832263 -4.83227,-4.832263 z m 0,21.559405 a 34.01189,34.01189 0 0 1 34.01188,34.01188 34.01189,34.01189 0 0 1 -34.01188,34.01188 34.01189,34.01189 0 0 1 -34.011875,-34.01188 34.01189,34.01189 0 0 1 34.011875,-34.01188 z'/></svg>
+		</button> 
+	</div>
+	<div id="map"></div>
+	<script defer>
+		let fontSize = "11px";
+		function constructPopupHtml(data, type) {
+			let popup = ""
+			if (type == "cafe") {
+				popup = "<p style = \"display:inline; word-wrap: break-word\">" + 
+					"<div><span style=\"font:" + fontSize + " Arial\"><h1 style=\"margin-bottom: -20px; margin-top: 0\">" + data[0] + "</h1></br>" +
+					"Address: " + data[3] + "</br>" +
+					"Coffee: " + data[4] + "</br>" +
+					"Size: " + data[5] + "</br>" +
+					"Price: " + data[6] + "</br>" +
+					"Matcha? " + data[7] + "</br>" +
+					"Chai? " + data[8] + "</br>" +
+					"Notes: " + data[9] + "</span></br></div></p>";
+			}
+			else if (type == "toilet") {
+				popup = '<p style = "display:inline; word-wrap: break-word">' + 
+					'<div><span style="font:' + fontSize + ' Arial"><h1 style="margin-bottom: -20px; margin-top: 0">' + data[0] + "</h1></br>" +
+					'Address: ' + data[3] + "</br>" +
+					'Notes: ' + data[4] + "</span></br>" +
+					'</div></p>'
+			}
+
+			return popup
+		}
+
+		async function createToiletMarkers() {
+			let response = await fetch("/toilets", {method : "GET", headers : {"Content-type": "application/json; charset=UTF-8"}});
+			let data = await response.json();
+
+			let toilets = data["toilets"]
+
+			for (let toilet of toilets) {
+				let popup = constructPopupHtml(toilet, "toilet")
+				let icon = "{{ url_for("static", filename = "images/ToiletIcon.png") }}"
+
+				addMapMarker(popup, parseFloat(toilet[2]), parseFloat(toilet[1]), icon)
+			}
+		}
+
+		async function createCafeMarkers() {
+			let response = await fetch("/cafes", {method : "GET", headers : {"Content-type": "application/json; charset=UTF-8"}})
+			let data = await response.json()
+
+			let cafes = data["cafes"]
+
+			for (let cafe of cafes) {
+				let popup = constructPopupHtml(cafe, "cafe")
+				let icon = "{{ url_for("static", filename = "images/CupIcon.png") }}"
+
+				addMapMarker(popup, parseFloat(cafe[2]), parseFloat(cafe[1]), icon)
+			}
+		}
+
+		const delay = ms => new Promise(res => setTimeout(res, ms));
+
+		async function updateMarks() {
+			const cafeToggle = document.getElementById("cafeSwitch")
+			const toiletToggle = document.getElementById("toiletSwitch")
+
+			clearMapMarks()
+
+			if (cafeToggle.checked) {
+				createCafeMarkers()
+			}
+			
+			if (toiletToggle.checked) {
+				createToiletMarkers()
+			}
+		}
+
+		(async() => {
+			await delay(100)
+			updateMarks()
+		})()
+
+
+	</script>
+</div>
+
+

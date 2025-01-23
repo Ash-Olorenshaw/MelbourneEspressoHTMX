@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- LEAFLET -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'lib/leaflet-1.9.4/leaflet.css') }}"/>
+		<script src="{{ url_for('static', filename = 'lib/leaflet-1.9.4/leaflet.js') }}"></script>
+
+		<!-- HTMX -->
+		<script src="{{ url_for('static', filename = 'lib/htmx-2.0.4.min.js') }}"></script>
+
+		<!-- DarkMode 
+		<script src="{{ url_for('static', filename = 'lib/darkmode-js.min.js') }}"></script>-->
+
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'main.css') }}">
+		<link rel = "stylesheet" href = "{{ url_for('static', filename = 'checkbox.css') }}">
+		<style> 
+			#map { height: 80%; }
+
+			@font-face {
+				font-family: DMSans;
+				src: url("{{ url_for('static', filename = 'fonts/DMSans-Regular.ttf') }}");
+			}
+		</style>
+	</head>
+	<body>
+		{% include "darkmode.html" %}
+		{% include "login_prompt.html" %}
+	</body>
+</html>

@@ -1,0 +1,29 @@
+.switch {
+	background-color: #ccc;
+	position: relative;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+.circle.dark-mode {
+	background-color: var(--background-color-dark);
+}
+.circle {
+	background-color: var(--background-color-light);
+	border-radius: 50%;
+	position: absolute;
+	transition: transform 0.3s;
+}
+
+input[type="checkbox"] {
+	display: none;
+}
+input[type="checkbox"]:checked + .switch.green {
+	background-color: #7FC97C;
+}
+input[type="checkbox"]:checked + .switch.blue {
+	background-color: #7BB2C6;
+}
+input[type="checkbox"]:checked + .switch .circle {
+	transform: translateX(25px);
+}

@@ -1,0 +1,36 @@
+<script>
+	let darkmodeOn = false
+	function toggleDarkMode() {
+		darkmodeOn = !darkmodeOn
+		document.body.classList.toggle('dark-mode')
+		
+		for (let circ of document.getElementsByClassName("circle")) {
+			circ.classList.toggle('dark-mode')
+		}
+
+		document.getElementById("darkmodeCheckbox").checked = darkmodeOn
+	}
+
+	document.addEventListener('DOMContentLoaded', (event) => {
+		const checkbox = document.getElementById('darkmodeCheckbox');
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			toggleDarkMode()
+		}
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+			if (e.matches) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+	});
+</script>
+
+<link rel = "stylesheet" href = "{{ url_for('static', filename = 'dark_light_toggle.css') }}">
+<label style = "position: absolute; bottom: 0; right: 0; z-index: 999999; padding: 0px 25px 50px 0px;">
+	<input type="checkbox" onclick="toggleDarkMode()" id = "darkmodeCheckbox">
+	<div class="switch darkmode" style = "width: 50px; height: 50px; border-radius: 50px;">
+		<div class="circle" style = "width: 42px; height: 42px; top: 4px; left: 4px;"></div>
+	</div>
+</label>

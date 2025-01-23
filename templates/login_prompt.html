@@ -1,0 +1,16 @@
+<div id = "loginpage">
+	<div style = "width: 100%;">
+		<h1 style = "font-size: 5vh; display: flex; justify-content: center; text-align: center;">Melbourne Espresso</h1>
+	</div>
+	<div id = "loginform" class = "centred-element">
+		<h1>Access Code</h1>
+		<form hx-post="/login" hx-target="#loginpage" hx-swap="outerHTML" style = "margin: 50px;">
+	
+			<input type="password" id="password" name="password" placeholder="****" required style = "text-align: center;" style = "margin: 50px;"/>
+			<input type="submit" value="Submit" style = "margin: 50px; width: 100px; height: 40px;"/>
+		</form>
+		{% if error %}
+			<p class="error"><strong>Error:</strong> {{ error }}
+		{% endif %}
+	</div>
+</div>
