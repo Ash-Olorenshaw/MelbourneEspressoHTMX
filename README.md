@@ -50,7 +50,7 @@ And the toilet table should contain the following:
 After that, create a Python Virtual Environment like this:
 
 ```nu-script
-python -m venv venv
+python3 -m venv venv
 ```
 
 Activate it and then install the required dependencies:
