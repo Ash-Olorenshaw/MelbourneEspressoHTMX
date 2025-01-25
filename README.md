@@ -8,11 +8,18 @@ Melbourne Espresso is a web app that I built that shows good toilet and coffee l
 
 The web app uses what I've stupidly dubbed the `PFfHhhh Stack` (as in the noise you make when exhaling loudly from pursed lips in disbelief); this stack uses the following technologies:
 
- - `Postgres`
- - `Flask`
-   - **(optional)** `Fly.io` (for hosting since it's just so easy!)
- - `HTMX`
+ - [Postgres](https://www.postgresql.org/)
+ - [Flask](https://github.com/pallets/flask)
+   - **(optional)** [Fly.io](https://fly.io/) (for hosting since it's just so easy!)
+ - [HTMX](https://github.com/bigskysoftware/htmx)
  - *and most importantly*: `hours` of work wrangling HTML/CSS/JS into line
+
+## Dependencies
+
+This project is not a complete repo as for the sake of copyright licences, etc I have left out all external libs, fonts and the images that I made. However, adding them back is quite simple. Create the following folders under `static/`:
+- `fonts` (for your fonts, this project uses `GoogleFonts DMSans-Regular`)
+- `images` (for images, favicon, etc)
+- `lib` (for [HTMX](https://github.com/bigskysoftware/htmx) and [LeafletJS](https://github.com/Leaflet/Leaflet) and any other libraries you want)
 
 ## Running
 
