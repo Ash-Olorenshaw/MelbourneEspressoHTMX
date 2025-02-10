@@ -41,6 +41,7 @@ DB_HOST=      # database host
 DB_PORT=      # database port
 
 LOGIN_PWD=    # your desired application password
+ADMIN_PWD=    # your desired admin password
 
 TOILET_TABLE= # db table name for toilet info
 CAFE_TABLE=   # db table name for cafe info
