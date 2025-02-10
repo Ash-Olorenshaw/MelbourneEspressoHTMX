@@ -36,6 +36,9 @@ function addMapMarker(markerHtml, lat, lng, iconImage) {
 
 function displayUserLocation() {
 	if (locationOn) {
+		if (locationMark != null) {
+			map.removeLayer(locationMark)
+		}
 		navigator.geolocation.getCurrentPosition(position => {
 			const { coords: { latitude, longitude }} = position;
 			locationMark = new L.marker([latitude, longitude], {}).addTo(map)

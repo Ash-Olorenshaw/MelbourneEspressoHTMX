@@ -1,0 +1,204 @@
+<div id = "adminPanel">
+	<div style = "width: 100%;">
+		<h1 style = "font-size: 5vh; display: flex; justify-content: center; text-align: center;">Melbourne Espresso</h1>
+	</div>
+
+	<label for = "SecretPassword">API post password:</label><div id = "SecretPassword" style = "outline: 2px solid; -webkit-text-security: disc; -webkit-appearance: textfield; -webkit-user-select: text;" contenteditable></div><br>
+	<div id = "cafeEditsList">
+		<h1 style = "font-size: 2.5vh; display: flex; justify-content: center; text-align: center;">Create Cafe</h1>
+		<label for = "CreateCafe-name">Name:</label><input type = "text" id = "CreateCafe-name"><br>
+		<label for = "CreateCafe-positionx">Longtitude:</label><input type = "text" id = "CreateCafe-positionx"<br> 
+		<label for = "CreateCafe-positiony">Latitude:</label><input type = "text" id = "CreateCafe-positiony"><br> 
+		<label for = "CreateCafe-address">Address:</label><input type = "text" id = "CreateCafe-address"><br> 
+		<label for = "CreateCafe-coffee">Coffee:</label><input type = "text" id = "CreateCafe-coffee"><br> 
+		<label for = "CreateCafe-size">Size:</label><input type = "text" id = "CreateCafe-size"><br> 
+		<label for = "CreateCafe-price">Price:</label><input type = "text" id = "CreateCafe-price"><br> 
+		<label for = "CreateCafe-matcha">Matcha:</label><input type = "text" id = "CreateCafe-matcha"><br> 
+		<label for = "CreateCafe-chai">Chai:</label><input type = "text" id = "CreateCafe-chai"><br> 
+		<label for = "CreateCafe-notes">Notes:</label><input type = "text" id = "CreateCafe-notes">
+		<button type = "button"  style = "cursor: pointer;" id = "createCafeButton">Create</button>
+		<p id="cafeCreated"><strong>Response:</strong>
+	</div>
+	<h1 style = "font-size: 2.5vh; display: flex; justify-content: center; text-align: center;">Modify Cafe</h1>
+	<div id = "cafeEditsList">
+	</div>
+	<script>
+
+		const passField = document.getElementById("SecretPassword")
+		let topSecretPassword = "";
+		passField.addEventListener("blur", () => {
+			topSecretPassword = passField.textContent
+		})
+
+		async function create_cafe(name, positionx, positiony, address, coffee, size, price, matcha, chai, notes) {
+			let response = await fetch("/create_cafe", {
+				method : "POST",
+				headers : {
+					"Content-type": "application/json; charset=UTF-8"
+				}, 
+				body : JSON.stringify({
+					password: topSecretPassword,
+					cafe: {
+						name: name,
+						positionx: positiony,
+						positiony: positionx,
+						size: size,
+						coffee: coffee,
+						address: address,
+						price: price,
+						matcha: matcha,
+						chai: chai,
+						notes: notes
+					}
+				})
+			})
+			let data = await response.json()
+			document.getElementById("cafeCreated").value = `${data}`
+		}
+
+		async function delete_cafe(cafename) {
+			console.log(`deleting cafe ${cafename}`)
+			let response = await fetch("/delete_cafe", {
+				method : "POST",
+				headers : {
+					"Content-type": "application/json; charset=UTF-8"
+				}, 
+				body : JSON.stringify({
+					password: topSecretPassword,
+					cafe: {
+						name: cafename
+					}
+				})
+			})
+			let data = await response.json()
+		}
+
+		async function modify_cafe(target, name, positionx, positiony, size, coffee, address, price, matcha, chai, notes) {
+			let response = await fetch("/modify_cafe", {
+				method : "POST",
+				headers : {
+					"Content-type": "application/json; charset=UTF-8"
+				}, 
+				body : JSON.stringify({
+					password : topSecretPassword,
+					cafe : {
+						target : target,
+						name : name,
+						positionx : positionx,
+						positiony : positiony,
+						size : size,
+						coffee : coffee,
+						address : address,
+						price : price,
+						matcha : matcha,
+						chai : chai,
+						notes : notes
+					}
+				})
+			})
+			let data = await response.json()
+		}
+
+		async function cafe_delete_listener(event) {
+			let locationArray = event.target.id.split("-")
+			locationArray.pop()
+			const location = locationArray.join("-")
+			const cafediv = document.getElementById(`${location}-cafediv`)
+			console.log(`deleting ${location}`)
+			await delete_cafe(location)
+			cafediv.remove()
+		}
+
+		async function cafe_modify_listener(event) {
+			let locationArray = event.target.id.split("-")
+			locationArray.pop()
+			let location = locationArray.join("-")
+			let name = document.getElementById(`${location}-name`)
+			let positionx = document.getElementById(`${location}-positionx`)
+			let positiony = document.getElementById(`${location}-positiony`)
+			let address = document.getElementById(`${location}-address`)
+			let coffee = document.getElementById(`${location}-coffee`)
+			let size = document.getElementById(`${location}-size`)
+			let price = document.getElementById(`${location}-price`)
+			let matcha = document.getElementById(`${location}-matcha`)
+			let chai = document.getElementById(`${location}-chai`)
+			let notes = document.getElementById(`${location}-notes`)
+			console.log(`modifying with ${name}, ${positionx}, ${positiony}, ${address}, ${coffee}, ${size}, ${price}, ${matcha}, ${chai}, ${notes}`)
+			await modify_cafe(location, name.value, positionx.value, positiony.value, size.value, coffee.value, address.value, price.value, matcha.value, chai.value, notes.value)
+			const new_location = name.value
+			name.id = new_location + "-name"
+			positionx.id = new_location + "-positionx"
+			positiony.id = new_location + "-positiony"
+			address.id = new_location + "-address"
+			coffee.id = new_location + "-coffee"
+			size.id = new_location + "-size"
+			price.id = new_location + "-price"
+			matcha.id = new_location + "-matcha"
+			chai.id = new_location + "-chai"
+			notes.id = new_location + "-notes"
+			event.target.id = new_location + "-button"
+		}
+
+
+		function addCafeEditField(cafeData) {
+			let newCafeEdit = document.createElement("div")
+			newCafeEdit.id = `${cafeData[0]}-cafediv`
+			let cafeInfo = "<br>" + `<label for = "${cafeData[0]}-name">Name:</label>` + `<input type = "text" id = "${cafeData[0]}-name" value = "${cafeData[0]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-positionx">Longtitude:</label>` + `<input type = "text" id = "${cafeData[0]}-positionx" value = "${cafeData[1]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-positiony">Latitude:</label>` + `<input type = "text" id = "${cafeData[0]}-positiony" value = "${cafeData[2]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-address">Address:</label>` + `<input type = "text" id = "${cafeData[0]}-address" value = "${cafeData[5]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-coffee">Coffee:</label>` + `<input type = "text" id = "${cafeData[0]}-coffee" value = "${cafeData[4]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-size">Size:</label>` + `<input type = "text" id = "${cafeData[0]}-size" value = "${cafeData[3]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-price">Price:</label>` + `<input type = "text" id = "${cafeData[0]}-price" value = "${cafeData[6]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-matcha">Matcha:</label>` + `<input type = "text" id = "${cafeData[0]}-matcha" value = "${cafeData[7]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-chai">Chai:</label>` + `<input type = "text" id = "${cafeData[0]}-chai" value = "${cafeData[8]}">` + "<br>" + 
+				`<label for = "${cafeData[0]}-notes">Notes:</label>` + `<input type = "text" id = "${cafeData[0]}-notes" value = "${cafeData[9]}">` + "<br>"
+			newCafeEdit.insertAdjacentHTML('beforeend', cafeInfo)
+
+			let submitButton = document.createElement('button')
+			submitButton.id = `${cafeData[0]}-button`
+			const submitButtonText = document.createTextNode("^ Update Cafe")
+			submitButton.appendChild(submitButtonText)
+			submitButton.addEventListener("click", async (event) => { cafe_modify_listener(event) })
+
+			let deleteButton = document.createElement('button')
+			deleteButton.id = `${cafeData[0]}-deletebutton`
+			const deleteButtonText = document.createTextNode("DELETE Cafe")
+			deleteButton.appendChild(deleteButtonText)
+			deleteButton.addEventListener("click", async (event) => { cafe_delete_listener(event) })
+
+			newCafeEdit.appendChild(submitButton)
+			newCafeEdit.appendChild(deleteButton)
+
+			let editList = document.getElementById("cafeEditsList")
+			editList.appendChild(newCafeEdit)
+		}
+
+		(async() => {
+			let response = await fetch("/cafes", {method : "GET", headers : {"Content-type": "application/json; charset=UTF-8"}})
+			let data = await response.json()
+
+			let cafes = data["cafes"]
+
+			for (let cafe of cafes) {
+				addCafeEditField(cafe)
+			}
+		})()
+
+		document.getElementById("createCafeButton").addEventListener("click", async (event) => { 
+			let name = document.getElementById("CreateCafe-name").value
+			let positionx = document.getElementById("CreateCafe-positionx").value
+			let positiony = document.getElementById("CreateCafe-positiony").value
+			let address = document.getElementById("CreateCafe-address").value
+			let coffee = document.getElementById("CreateCafe-coffee").value
+			let size = document.getElementById("CreateCafe-size").value
+			let price = document.getElementById("CreateCafe-price").value
+			let matcha = document.getElementById("CreateCafe-matcha").value
+			let chai = document.getElementById("CreateCafe-chai").value
+			let notes = document.getElementById("CreateCafe-notes").value
+
+			create_cafe(name, positionx, positiony, address, coffee, size, price, matcha, chai, notes) 
+		})
+
+	</script>
+</div>

@@ -32,9 +32,9 @@
 			if (type == "cafe") {
 				popup = "<p style = \"display:inline; word-wrap: break-word\">" + 
 					"<div><span style=\"font:" + fontSize + " Arial\"><h1 style=\"margin-bottom: -20px; margin-top: 0\">" + data[0] + "</h1></br>" +
-					"Address: " + data[3] + "</br>" +
+					"Address: " + data[5] + "</br>" +
 					"Coffee: " + data[4] + "</br>" +
-					"Size: " + data[5] + "</br>" +
+					"Size: " + data[3] + "</br>" +
 					"Price: " + data[6] + "</br>" +
 					"Matcha? " + data[7] + "</br>" +
 					"Chai? " + data[8] + "</br>" +
@@ -85,7 +85,7 @@
 			const cafeToggle = document.getElementById("cafeSwitch")
 			const toiletToggle = document.getElementById("toiletSwitch")
 
-			clearMapMarks()
+			//clearMapMarks()
 
 			if (cafeToggle.checked) {
 				createCafeMarkers()
