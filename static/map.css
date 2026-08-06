@@ -1,0 +1,30 @@
+.leaflet-popup-content-wrapper {
+	border: 1px solid black;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.leaflet-popup-tip {
+	box-shadow: none;
+	border: 1px solid black;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+	display: none;
+}
+
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+	border: none;
+}
+
+.leaflet-touch .leaflet-bar {
+	& a {
+		border: 1px solid black;
+		outline: none;
+		border-radius: 0;
+	}
+
+	& a:first-child {
+		margin-bottom: -1px;
+	}
+}

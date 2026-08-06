@@ -1,26 +1,9 @@
-import sys
-import os
-
-from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, render_template, request, send_file
-import psycopg
-from psycopg import sql
+from psycopg import sql, connect as db_conn
 
-load_dotenv()
+from src.globals import *
+
 app = Flask(__name__)
-
-login_pwd = os.getenv("LOGIN_PWD")
-admin_pwd = os.getenv("ADMIN_PWD")
-
-cafe_table_name = os.getenv("CAFE_TABLE")
-toilet_table_name = os.getenv("TOILET_TABLE")
-
-db_name = os.getenv("DB_NAME")
-db_user = os.getenv("DB_USER")
-db_pwd = os.getenv("DB_PWD")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
-db_connection_string = f"dbname={db_name} user={db_user} password={db_pwd} host={db_host} port={db_port}"
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
@@ -29,7 +12,6 @@ def main():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
-
     if request.method == 'POST':
         if request.form['password'] != f'{login_pwd}' and request.form['password'] != admin_pwd:
             error = 'Invalid Code.'
@@ -40,12 +22,10 @@ def login():
     return render_template('login_prompt.html', error = error)
 
 def get_data_from_table(table_name : str):
-    #print(f"getting data from {table_name}", file = sys.stderr)
-    postgres_connection = psycopg.connect(db_connection_string)
+    postgres_connection = db_conn(db_connection_string)
     postgres_cursor = postgres_connection.cursor()
 
     postgres_cursor.execute(sql.SQL('''SELECT * FROM {}''').format(sql.Identifier(table_name)))
-    #colnames = [desc[0] for desc in postgres_cursor.description]
     test_dat = postgres_cursor.fetchall()
     postgres_cursor.close()
     postgres_connection.close()
@@ -55,27 +35,27 @@ def get_data_from_table(table_name : str):
         new_dat.append(list(test_dat[i]))
         new_dat[i].pop(0)
 
-    #print(new_dat, file = sys.stderr)
-    #print(colnames, file = sys.stderr)
     return new_dat
 
 @app.route('/cafes', methods=['GET'])
 def cafes():
-    cafe_data = get_data_from_table(cafe_table_name) #type: ignore
-    final_data = {"cafes" : cafe_data}
-    return jsonify(
-        final_data
-    ), 200
+    if cafe_table_name:
+        cafe_data = get_data_from_table(cafe_table_name)
+        final_data = {"cafes" : cafe_data}
+        return jsonify(
+            final_data
+        ), 200
+    else:
+        return jsonify({"cafes" : []}), 400
 
 @app.route('/create_cafe', methods=['POST', 'GET'])
 def create_cafe():
-    #print(f"modifying with data '{request.json}'", file = sys.stderr)
-    if request.json == None or not ("password" in request.json) or request.json['password'] != admin_pwd:
-        return jsonify({"status" : "failed - malformed request"}), 400
+    if request.json is None or not ("password" in request.json) or request.json['password'] != admin_pwd:
+        return jsonify({"status" : "failed - incorrect password"}), 400
 
-    elif request.json['password'] == admin_pwd:
+    elif request.json['password'] == admin_pwd and cafe_table_name:
         if "cafe" in request.json and all(key in request.json["cafe"] for key in ["name", "positionx", "positiony", "size", "coffee", "address", "price", "matcha", "chai", "notes"]):
-            postgres_connection = psycopg.connect(db_connection_string)
+            postgres_connection = db_conn(db_connection_string)
             postgres_cursor = postgres_connection.cursor()
 
             postgres_cursor.execute(
@@ -99,7 +79,7 @@ def create_cafe():
             postgres_connection.commit()
             postgres_connection.close()
         else:
-            return jsonify({"status" : "failed - malformed request"}), 400
+            return jsonify({"status" : "failed - some fields are empty"}), 400
 
 
     return jsonify(
@@ -108,13 +88,12 @@ def create_cafe():
 
 @app.route('/modify_cafe', methods=['POST', 'GET'])
 def modify_cafe():
-    #print(f"modifying with data '{request.json}'", file = sys.stderr)
-    if request.json == None or not ("password" in request.json) or request.json['password'] != admin_pwd:
-        return jsonify({"status" : "failed - malformed request"}), 400
+    if request.json is None or not ("password" in request.json) or request.json['password'] != admin_pwd:
+        return jsonify({"status" : "failed - incorrect password"}), 400
 
-    elif request.json['password'] == admin_pwd:
+    elif request.json['password'] == admin_pwd and cafe_table_name:
         if "cafe" in request.json and all(key in request.json["cafe"] for key in ["name", "positionx", "positiony", "size", "coffee", "address", "price", "matcha", "chai", "notes", "target"]):
-            postgres_connection = psycopg.connect(db_connection_string)
+            postgres_connection = db_conn(db_connection_string)
             postgres_cursor = postgres_connection.cursor()
 
             postgres_cursor.execute(
@@ -139,18 +118,18 @@ def modify_cafe():
             postgres_connection.commit()
             postgres_connection.close()
         else:
-            return jsonify({"status" : "failed - malformed request"}), 400
+            return jsonify({"status" : "failed - some fields are empty"}), 400
 
     return jsonify({"status" : "success"}), 200
 
 @app.route('/delete_cafe', methods=['POST', 'GET'])
 def delete_cafe():
-    if request.json == None or not ("password" in request.json) or request.json['password'] != admin_pwd:
+    if request.json is None or not ("password" in request.json) or request.json['password'] != admin_pwd:
         return jsonify({"status" : "failed - malformed request"}), 400
 
     elif request.json['password'] == admin_pwd:
-        if "cafe" in request.json and "name" in request.json["cafe"]:
-            postgres_connection = psycopg.connect(db_connection_string)
+        if "cafe" in request.json and "name" in request.json["cafe"] and cafe_table_name:
+            postgres_connection = db_conn(db_connection_string)
             postgres_cursor = postgres_connection.cursor()
 
             postgres_cursor.execute(sql.SQL('''DELETE FROM {} WHERE name = %s''').format(sql.Identifier(cafe_table_name)), [request.json['cafe']['name']])

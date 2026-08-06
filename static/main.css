@@ -22,11 +22,24 @@ body {
 #loginform {
 	width: 300px;
 	height: 300px;
-
-	box-shadow: 5px 5px 5px;
-	border-radius: 25px; 
+	/* box-shadow: 5px 5px 5px; */
+	border-radius: 0; 
 	background-color: rgba(100, 100, 100, 0.3);
+}
 
+#password {
+	text-align: center;
+	border: 1px solid black;
+	border-radius: 0;
+	line-height: 2rem;
+}
+
+.submit-button {
+	width: 100px;
+	height: 40px;
+	border: 1px solid black;
+	border-radius: 0;
+	background-color: white;
 }
 
 .centred-element {
@@ -45,16 +58,57 @@ body {
 /* Map location button */ 
 
 .mapLocButton {
-	background-color: var(--background-color-light);
-	outline: none;
-	box-shadow: 0 3px 6px;
-	transition: all 0.3s;
+	cursor: pointer;
+	border-radius: 50%;
+	background: none;
+	border: 3.5px solid;
+	color: darkblue;
 }
 
-.mapLocButton .dark-mode {
-	background-color: var(--background-color-dark);
+.cafeDiv {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	margin-bottom: 100px;
+
+	input, textarea {
+		border: none;
+		margin-top: 2.5px;
+		padding: 5px;
+		font-size: small;
+
+		background-color: var(--background-color-dark);
+		color: var(--text-color-dark);
+
+		&.dark-mode {
+			background-color: var(--background-color-light);
+			color: var(--text-color-light);
+		}
+	}
+
+	.delete {
+		background-color: indianred;
+		color: white;
+		font-weight: bold;
+		padding: 10px;
+		margin-top: 30px;
+		border: none;
+		cursor: pointer;
+	}
+
+	.update {
+		background-color: darkolivegreen;
+		color: white;
+		font-weight: bold;
+		padding: 10px;
+		margin-top: 30px;
+		border: none;
+		cursor: pointer;
+	}
 }
 
-.mapLocButton:hover {
-	box-shadow: none;
+h3 {
+	font-size: 2.5vh;
+	display: flex;
+	justify-content: center;
+	text-align: center;
 }

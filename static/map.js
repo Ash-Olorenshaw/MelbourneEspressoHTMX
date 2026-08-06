@@ -1,5 +1,5 @@
-var map
-var cafeMarks = []
+let map
+let cafeMarks = []
 let locationOn = false
 let locationMark = null
 

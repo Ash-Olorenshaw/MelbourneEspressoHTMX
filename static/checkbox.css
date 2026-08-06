@@ -3,6 +3,7 @@
 	position: relative;
 	cursor: pointer;
 	transition: background-color 0.3s;
+	border: 1px solid black;
 }
 
 .circle.dark-mode {
@@ -10,9 +11,10 @@
 }
 .circle {
 	background-color: var(--background-color-light);
-	border-radius: 50%;
+	border-radius: 0;
 	position: absolute;
 	transition: transform 0.3s;
+	border: 1px solid black;
 }
 
 input[type="checkbox"] {
@@ -26,4 +28,15 @@ input[type="checkbox"]:checked + .switch.blue {
 }
 input[type="checkbox"]:checked + .switch .circle {
 	transform: translateX(25px);
+}
+
+/* darkmode */
+.switch.darkmode {
+	background: white;
+	position: relative;
+	cursor: pointer;
+	border: 1px solid black;
+	border-radius: 100%;
+	font-size: 32px;
+	padding: 4px;
 }
