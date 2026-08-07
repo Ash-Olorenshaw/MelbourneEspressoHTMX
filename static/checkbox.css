@@ -6,9 +6,6 @@
 	border: 1px solid black;
 }
 
-.circle.dark-mode {
-	background-color: var(--background-color-dark);
-}
 .circle {
 	background-color: var(--background-color-light);
 	border-radius: 0;
@@ -27,7 +24,7 @@ input[type="checkbox"]:checked + .switch.blue {
 	background-color: #7BB2C6;
 }
 input[type="checkbox"]:checked + .switch .circle {
-	transform: translateX(25px);
+	transform: translateX(30px);
 }
 
 /* darkmode */

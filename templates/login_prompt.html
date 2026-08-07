@@ -2,10 +2,9 @@
 	<div style = "width: 100%;">
 		<h1 style = "font-size: 5vh; display: flex; justify-content: center; text-align: center;">Melbourne Espresso</h1>
 	</div>
-	<div id = "loginform" class = "centred-element">
-		<h1>Access Code</h1>
-		<form hx-post="/login" hx-target="#loginpage" hx-swap="outerHTML" style = "margin: 50px;">
-	
+	<div id="loginform" class="centred-element">
+		<h1 style="color: black;">Access Code</h1>
+		<form hx-post="/login" hx-target="#loginpage" hx-swap="outerHTML">
 			<input type="password" id="password" name="password" placeholder="****" required/>
 			<input class="submit-button" type="submit" value="Submit"/>
 		</form>

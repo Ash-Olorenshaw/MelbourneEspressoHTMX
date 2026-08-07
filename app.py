@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, render_template, render_template, request, send_file
-from psycopg import sql, connect as db_conn
-
+from src.db_connector import cafe_table_create, cafe_table_del, cafe_table_modify, get_data_from_table
 from src.globals import *
 
 app = Flask(__name__)
@@ -21,22 +20,6 @@ def login():
             return render_template('map.html')
     return render_template('login_prompt.html', error = error)
 
-def get_data_from_table(table_name : str):
-    postgres_connection = db_conn(db_connection_string)
-    postgres_cursor = postgres_connection.cursor()
-
-    postgres_cursor.execute(sql.SQL('''SELECT * FROM {}''').format(sql.Identifier(table_name)))
-    test_dat = postgres_cursor.fetchall()
-    postgres_cursor.close()
-    postgres_connection.close()
-
-    new_dat = []
-    for i, _ in enumerate(test_dat):
-        new_dat.append(list(test_dat[i]))
-        new_dat[i].pop(0)
-
-    return new_dat
-
 @app.route('/cafes', methods=['GET'])
 def cafes():
     if cafe_table_name:
@@ -54,34 +37,8 @@ def create_cafe():
         return jsonify({"status" : "failed - incorrect password"}), 400
 
     elif request.json['password'] == admin_pwd and cafe_table_name:
-        if "cafe" in request.json and all(key in request.json["cafe"] for key in ["name", "positionx", "positiony", "size", "coffee", "address", "price", "matcha", "chai", "notes"]):
-            postgres_connection = db_conn(db_connection_string)
-            postgres_cursor = postgres_connection.cursor()
-
-            postgres_cursor.execute(
-                sql.SQL('''INSERT INTO {} 
-                    (name, positionx, positiony, size, coffee, address, price, matcha, chai, notes)
-                    VALUES 
-                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''').format(sql.Identifier(cafe_table_name)), (
-                        request.json['cafe']['name'],
-                        request.json['cafe']['positionx'],
-                        request.json['cafe']['positiony'],
-                        request.json['cafe']['size'],
-                        request.json['cafe']['coffee'],
-                        request.json['cafe']['address'],
-                        request.json['cafe']['price'],
-                        request.json['cafe']['matcha'],
-                        request.json['cafe']['chai'],
-                        request.json['cafe']['notes']
-                    )
-                )
-            postgres_cursor.close()
-            postgres_connection.commit()
-            postgres_connection.close()
-        else:
+        if (not cafe_table_create(request.json)):
             return jsonify({"status" : "failed - some fields are empty"}), 400
-
-
     return jsonify(
             {"status" : "success"}
     ), 200
@@ -92,34 +49,8 @@ def modify_cafe():
         return jsonify({"status" : "failed - incorrect password"}), 400
 
     elif request.json['password'] == admin_pwd and cafe_table_name:
-        if "cafe" in request.json and all(key in request.json["cafe"] for key in ["name", "positionx", "positiony", "size", "coffee", "address", "price", "matcha", "chai", "notes", "target"]):
-            postgres_connection = db_conn(db_connection_string)
-            postgres_cursor = postgres_connection.cursor()
-
-            postgres_cursor.execute(
-                sql.SQL('''UPDATE {} SET 
-                    (name, positionx, positiony, size, coffee, address, price, matcha, chai, notes)
-                    = (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    WHERE name = %s''').format(sql.Identifier(cafe_table_name)), (
-                        request.json['cafe']['name'],
-                        request.json['cafe']['positionx'],
-                        request.json['cafe']['positiony'],
-                        request.json['cafe']['size'],
-                        request.json['cafe']['coffee'],
-                        request.json['cafe']['address'],
-                        request.json['cafe']['price'],
-                        request.json['cafe']['matcha'],
-                        request.json['cafe']['chai'],
-                        request.json['cafe']['notes'],
-                        request.json['cafe']['target']
-                    )
-                )
-            postgres_cursor.close()
-            postgres_connection.commit()
-            postgres_connection.close()
-        else:
+        if (not cafe_table_modify(request.json)):
             return jsonify({"status" : "failed - some fields are empty"}), 400
-
     return jsonify({"status" : "success"}), 200
 
 @app.route('/delete_cafe', methods=['POST', 'GET'])
@@ -128,17 +59,8 @@ def delete_cafe():
         return jsonify({"status" : "failed - malformed request"}), 400
 
     elif request.json['password'] == admin_pwd:
-        if "cafe" in request.json and "name" in request.json["cafe"] and cafe_table_name:
-            postgres_connection = db_conn(db_connection_string)
-            postgres_cursor = postgres_connection.cursor()
-
-            postgres_cursor.execute(sql.SQL('''DELETE FROM {} WHERE name = %s''').format(sql.Identifier(cafe_table_name)), [request.json['cafe']['name']])
-            postgres_cursor.close()
-            postgres_connection.commit()
-            postgres_connection.close()
-        else:
+        if (not cafe_table_del(request.json)):
             return jsonify({"status" : "failed - malformed request"}), 400
-
     return jsonify({"status" : "success"}), 200
 
 

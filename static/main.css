@@ -15,16 +15,44 @@ html * {
 }
 
 body {
-  background-color: var(--background-color-light);
-  color: var(--text-color-light);
+	background-color: var(--background-color-light);
+	color: var(--text-color-light);
+
+	--current-background: var(--background-color-light);
+	--current-text: var(--text-color-light);
+	--current-background-inverse: var(--background-color-dark);
+	--current-text-inverse: var(--text-color-dark);
+
+	&.dark-mode {
+		--current-background: var(--background-color-dark);
+		--current-text: var(--text-color-dark);
+		--current-background-inverse: var(--background-color-light);
+		--current-text-inverse: var(--text-color-light);
+	}
+}
+
+h3 {
+	font-size: 2.5vh;
+	display: flex;
+	justify-content: center;
+	text-align: center;
 }
 
 #loginform {
-	width: 300px;
 	height: 300px;
-	/* box-shadow: 5px 5px 5px; */
 	border-radius: 0; 
-	background-color: rgba(100, 100, 100, 0.3);
+	background-color: #7BB2C6;
+
+	& .error {
+		color: --text-color-light;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
 }
 
 #password {
@@ -40,6 +68,7 @@ body {
 	border: 1px solid black;
 	border-radius: 0;
 	background-color: white;
+	cursor: pointer;
 }
 
 .centred-element {
@@ -59,10 +88,13 @@ body {
 
 .mapLocButton {
 	cursor: pointer;
-	border-radius: 50%;
+	/* border-radius: 50%; */
 	background: none;
-	border: 3.5px solid;
-	color: darkblue;
+	/* border: 3.5px solid; */
+	/* color: darkblue; */
+	border: 1px solid black;
+	color: black;
+	background: white;
 }
 
 .cafeDiv {
@@ -70,45 +102,70 @@ body {
 	grid-template-columns: 1fr 1fr;
 	margin-bottom: 100px;
 
-	input, textarea {
-		border: none;
-		margin-top: 2.5px;
+	input, textarea, p {
+		border: 1px solid currentColor;
+		outline: 2px transparent;
+		margin: 2.5px;
 		padding: 5px;
 		font-size: small;
 
-		background-color: var(--background-color-dark);
-		color: var(--text-color-dark);
+		background-color: var(--current-background);
+		color: var(--current-text);
 
-		&.dark-mode {
-			background-color: var(--background-color-light);
-			color: var(--text-color-light);
+		&:focus {
+			border: 1px solid royalblue;
+			outline: 2px royalblue
 		}
 	}
 
-	.delete {
-		background-color: indianred;
-		color: white;
-		font-weight: bold;
-		padding: 10px;
-		margin-top: 30px;
-		border: none;
-		cursor: pointer;
+	p {
+		background-color: royalblue;
+		&:focus {
+			border: 1px solid currentColor;
+			outline: 2px transparent;
+		}
 	}
 
-	.update {
-		background-color: darkolivegreen;
+	button {
+		--button-hover-fx-len: 0;
 		color: white;
 		font-weight: bold;
 		padding: 10px;
 		margin-top: 30px;
 		border: none;
 		cursor: pointer;
+		box-shadow: 0 0 0 100vmax inset rgb(0 0 0/var(--button-hover-fx-len,0%));
+
+		&:active {
+			scale: 99%;
+		}
+
+		&:hover {
+			--button-hover-fx-len: 40%;
+		}
+
+		&.delete {
+			background-color: crimson;
+		}
+		&.update {
+			background-color: seagreen;
+		}
+		&.info {
+			background-color: coral;
+		}
+		&.secondary {
+			background-color: lightgrey;
+			color: black;
+		}
 	}
 }
 
-h3 {
-	font-size: 2.5vh;
-	display: flex;
-	justify-content: center;
-	text-align: center;
+dialog {
+	width: 300px;
+	height: 150px;
+	overflow: hidden;
+
+	background-color: var(--current-background);
+	border: 1px solid var(--current-text);
+	color: var(--current-text);
 }

@@ -5,8 +5,6 @@
 		document.body.classList.toggle('dark-mode');
 		document.getElementById("darkmodeCheckbox").checked = darkmodeOn;
 		document.querySelector("#darkmodeCheckbox + div").innerText = darkmodeOn ? "🌙" : "☀️";
-		// for (let circle of document.getElementsByClassName("circle"))
-		// 	circle.classList.toggle('dark-mode')
 	}
 
 	function toggleDarkMode() {
@@ -22,19 +20,12 @@
 
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 			checkbox.checked = e.matches ? true : false;
-			// if (e.matches) {
-			// 	checkbox.checked = true;
-			// } else {
-			// 	checkbox.checked = false;
-			// }
 			updateDarkMode();
 		});
 	});
 </script>
 
 <label style = "position: absolute; bottom: 2%; right: 2%; z-index: 999999;">
-	<input type="checkbox" onclick="toggleDarkMode()" id = "darkmodeCheckbox">
-	<div class="switch darkmode">
-		<!-- <div class="circle" style = "width: 42px; height: 42px; top: 4px; left: 4px;"></div> -->
-	</div>
+	<input type="checkbox" onclick="toggleDarkMode()" id="darkmodeCheckbox">
+	<div class="switch darkmode"></div>
 </label>
