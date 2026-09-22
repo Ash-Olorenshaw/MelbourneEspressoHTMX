@@ -106,19 +106,19 @@ async function cafe_delete_listener(event) {
 async function cafe_modify_listener(event) {
 	let locationArray = event.target.id.split("-")
 	locationArray.pop()
-	const location = locationArray.join("-")
-	const name = document.getElementById(`${location}-name`)
-	const positionx = document.getElementById(`${location}-positionx`)
-	const positiony = document.getElementById(`${location}-positiony`)
-	const address = document.getElementById(`${location}-address`)
-	const coffee = document.getElementById(`${location}-coffee`)
-	const size = document.getElementById(`${location}-size`)
-	const price = document.getElementById(`${location}-price`)
-	const matcha = document.getElementById(`${location}-matcha`)
-	const chai = document.getElementById(`${location}-chai`)
-	const notes = document.getElementById(`${location}-notes`)
+	const cafeLocation = locationArray.join("-")
+	const name = document.getElementById(`${cafeLocation}-name`)
+	const positionx = document.getElementById(`${cafeLocation}-positionx`)
+	const positiony = document.getElementById(`${cafeLocation}-positiony`)
+	const address = document.getElementById(`${cafeLocation}-address`)
+	const coffee = document.getElementById(`${cafeLocation}-coffee`)
+	const size = document.getElementById(`${cafeLocation}-size`)
+	const price = document.getElementById(`${cafeLocation}-price`)
+	const matcha = document.getElementById(`${cafeLocation}-matcha`)
+	const chai = document.getElementById(`${cafeLocation}-chai`)
+	const notes = document.getElementById(`${cafeLocation}-notes`)
 	console.log(`modifying with ${name}, ${positionx}, ${positiony}, ${address}, ${coffee}, ${size}, ${price}, ${matcha}, ${chai}, ${notes}`)
-	await modify_cafe(location, name.value, positionx.value, positiony.value, size.value, coffee.value, address.value, price.value, matcha.value, chai.value, notes.value)
+	await modify_cafe(cafeLocation, name.value, positionx.value, positiony.value, size.value, coffee.value, address.value, price.value, matcha.value, chai.value, notes.value)
 	const new_location = name.value
 	name.id = new_location + "-name"
 	positionx.id = new_location + "-positionx"
@@ -243,16 +243,16 @@ function addCafeEditField(cafeData) {
 })()
 
 document.getElementById("createCafeButton").addEventListener("click", async () => { 
-	const name = document.getElementById("CreateCafe-name").value
-	const positionx = document.getElementById("CreateCafe-positionx").value
-	const positiony = document.getElementById("CreateCafe-positiony").value
-	const address = document.getElementById("CreateCafe-address").value
-	const coffee = document.getElementById("CreateCafe-coffee").value
-	const size = document.getElementById("CreateCafe-size").value
-	const price = document.getElementById("CreateCafe-price").value
-	const matcha = document.getElementById("CreateCafe-matcha").value
-	const chai = document.getElementById("CreateCafe-chai").value
-	const notes = document.getElementById("CreateCafe-notes").value
-
-	create_cafe(name, positionx, positiony, address, coffee, size, price, matcha, chai, notes) 
+	create_cafe(
+		document.getElementById("CreateCafe-name").value,
+		document.getElementById("CreateCafe-positionx").value,
+		document.getElementById("CreateCafe-positiony").value,
+		document.getElementById("CreateCafe-address").value,
+		document.getElementById("CreateCafe-coffee").value,
+		document.getElementById("CreateCafe-size").value,
+		document.getElementById("CreateCafe-price").value,
+		document.getElementById("CreateCafe-matcha").value,
+		document.getElementById("CreateCafe-chai").value,
+		document.getElementById("CreateCafe-notes").value
+	) 
 })

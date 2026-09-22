@@ -73,18 +73,3 @@ def cafe_table_create(json_dat : Any) -> bool:
         return False
     return True
 
-def get_data_from_table(table_name : str):
-    postgres_connection = db_conn(db_connection_string)
-    postgres_cursor = postgres_connection.cursor()
-
-    postgres_cursor.execute(sql.SQL('''SELECT * FROM {}''').format(sql.Identifier(table_name)))
-    test_dat = postgres_cursor.fetchall()
-    postgres_cursor.close()
-    postgres_connection.close()
-
-    new_dat = []
-    for i, _ in enumerate(test_dat):
-        new_dat.append(list(test_dat[i]))
-        new_dat[i].pop(0)
-
-    return new_dat

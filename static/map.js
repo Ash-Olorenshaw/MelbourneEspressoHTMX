@@ -1,9 +1,15 @@
-let map
-let cafeMarks = []
 let locationOn = false
 let locationMark = null
 
-map = L.map('map').setView([-37.8130830335284, 144.96277203427053], 15.0)
+const cafeMarks = []
+const map = L.map('map').setView(
+	[
+		// -37.8130830335284, 144.96277203427053
+		-37.8675245172449, 144.9855898840527
+	], 
+	// 15.0
+	14.0
+)
 
 // Add the tile layer from OpenStreetMap
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {//https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png', {
